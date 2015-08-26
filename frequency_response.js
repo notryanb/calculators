@@ -1,3 +1,4 @@
+
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
@@ -24,74 +25,50 @@ var yAxis = d3.svg.axis()
 
 var tickFormat = d3.format("s");
 
+
+//Define the Line
+var valueLine = d3.svg.line()
+    .x(function(d) { return x(d.frequency); })
+    .y(function(d) { return y(d.gain) });
+  
+
+//Add svg canvas
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-svg.append("rect")
-    .attr("width", width)
-    .attr("height", height);
 
-svg.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(xAxis);
+// Get fake data
+d3.csv("fakeData.csv", function(error, data) {
 
-svg.append("g")
-    .attr("class", "y axis")
-    .call(yAxis);
-
-
-
-// var width = 500;
-// var height = 500;
-// // var svgAxisPadding = 20;
-
-// var margin = {top: 210, right: 20, bottom: 220, left: 20},
-//     width = 960 - margin.left - margin.right,
-//     height = 500 - margin.top - margin.bottom;
-
-// var x = d3.scale.log()
-//     .domain([10, 10000])
-//     .range([0, width]);
-
-// var xAxis = d3.svg.axis()
-//     .scale(x)
-//     .orient("bottom")
-//     .ticks(1, 20000)
-//     .tickSize(6, 0);
-
-// var svg = d3.select("body").append("svg")
-//     .attr("width", width + margin.left + margin.right)
-//     .attr("height", height + margin.right + margin.bottom)
-//   .append("g")
-//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-// svg.append("g")
-//     .attr("class", "x axis")
-//     .call(xAxis);
+    data.forEach(function(d){ console.log(d.frequency + "|" + d.gain) });
+    svg.append("rect")
+        .attr("width", width)
+        .attr("height", height);
+     
+     // Append Path
+     svg.append("path")
+        .attr("class", "line")
+        .attr("d", valueLine(data));
 
 
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
 
 
- // var bars = canvas.selectAll('rect')
- //                 .data(dataArray)
- //                 .enter()
- //                     .append('rect')
- //                     .attr('width', function(dataElem) { 
- //                                       return widthScale(dataElem); 
- //                                     })
- //                     .attr('height', 50)
- //                     .attr('fill', function(dataElem) {
- //                                       return colorScale(dataElem);
- //                                   })
- //                     .attr('y', function(dataElem, index) {
- //                                   return index * 100;
- //                                 });
- // canvas.append('g').attr('transform', "translate(0, 100)")
- //       .call(axis);
+    })
+     
+    
+ // end of d3 json
+
 
 function cutoffFreq(resistor, capacitor) {
   return 1 / (2 * resistor * capacitor * Math.PI);
@@ -129,7 +106,9 @@ function printValue(elem) {
 }
 
 
+
 var form = document.getElementById('guitar-pickup-form');
 form.addEventListener('submit', function(event) {
   printValue(event)
 }, false);
+
