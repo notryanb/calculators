@@ -1,32 +1,80 @@
-
-
-var width = 500;
-var height = 500;
-// var svgAxisPadding = 20;
-
-var margin = {top: 210, right: 20, bottom: 220, left: 20},
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 var x = d3.scale.log()
-    .domain([10, 10000])
+    .domain([1, 1000])
     .range([0, width]);
+
+var y = d3.scale.linear()
+    .domain([-40, 0])
+    .range([height, 0]);
 
 var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom")
-    .ticks(1, 20000)
-    .tickSize(6, 0);
+    .ticks(3, function(d) { return tickFormat(d) + 'Hz'; })
+    .tickSize(-height);
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .ticks(5)
+    .tickSize(-width);
+
+var tickFormat = d3.format("s");
 
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.right + margin.bottom)
-  .append("g")
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+svg.append("rect")
+    .attr("width", width)
+    .attr("height", height);
 
 svg.append("g")
     .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
     .call(xAxis);
+
+svg.append("g")
+    .attr("class", "y axis")
+    .call(yAxis);
+
+
+
+// var width = 500;
+// var height = 500;
+// // var svgAxisPadding = 20;
+
+// var margin = {top: 210, right: 20, bottom: 220, left: 20},
+//     width = 960 - margin.left - margin.right,
+//     height = 500 - margin.top - margin.bottom;
+
+// var x = d3.scale.log()
+//     .domain([10, 10000])
+//     .range([0, width]);
+
+// var xAxis = d3.svg.axis()
+//     .scale(x)
+//     .orient("bottom")
+//     .ticks(1, 20000)
+//     .tickSize(6, 0);
+
+// var svg = d3.select("body").append("svg")
+//     .attr("width", width + margin.left + margin.right)
+//     .attr("height", height + margin.right + margin.bottom)
+//   .append("g")
+//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// svg.append("g")
+//     .attr("class", "x axis")
+//     .call(xAxis);
+
+
+
 
  // var bars = canvas.selectAll('rect')
  //                 .data(dataArray)
